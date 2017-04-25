@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en us">
+<head>
+	<meta charset="UTF-8">
+	<title>Giftastic!</title>
+	<link rel="stylesheet" type="text/css" href="assets/css/reset.css">
+	<link rel="stylesheet" type="text/css" href="assets/css/style.css">
+	<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<script
+  src="https://code.jquery.com/jquery-3.2.1.js"
+  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+  crossorigin="anonymous"></script>
+  <script type="text/javascript" src="assets/js/app.js"></script>
+
+</head>
+<body>
+
+ <div class="container">
+    <h1>Gif Search</h1>
+<div id="buttons-view"></div>
+
+<form id="form">
+      <label for="button-input">Add Your Own!</label>
+      <input type="text" id="button-input">
+      <br>
+
+      <!-- Button triggers new movie to be added -->
+      <input id="add-button" type="submit" value="Add Your Own!">
+    </form>
+
+    <div id="gifs-here">
+    </div>
+
+    <script type="text/javascript">
+
+var buttons = ["Riverrun", "Past", "Eve", "and", "Adam's", "from", "swerve", "of", "shore", "to", "bend", 
+"of", "bay"];
+
+function renderButtons() {
+
+
+        $("#buttons-view").empty();
+        
+        for (var i = 0; i < buttons.length; i++){
+
+          $("#buttons-view").append("<button>"+ buttons[i]);
+
+
+        }
+//so now the NEW buttons work, but the existing ones don't... //think I need to add the old ones to the array... push... and then something
+        
+      }   //this is where renderButtons() ends!
+
+
+//this is the start of the click to MAKE A BUTTON
+      $("#add-button").on("click", function(event) {
+      
+        event.preventDefault();
+    
+    //grabs text from input...
+       var theButton = $("#button-input").val();
+
+//pushes new button into the Array, clears input space...
+        buttons.push(theButton);
+         $("#button-input").val("");
+
+
+     var giphyKey = "dc6zaTOxFJmzC";
+     var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + theButton + "&api_key=dc6zaTOxFJmzC";
+
+
+
+     $.ajax({
+        url: queryURL,
+        method: "GET"
+      }).done(function(response){
+        var results = response.data;
+
+        for (var i = 0; i < results.length; i++){
+            var gifDiv = $("<div class='item'>");
+
+            var rating = results[i].rating;
+
+            var p = $("<p>").text("Rating: " + rating);
+
+            var image = $("<img>");
+            image.attr("src", results[i].images.fixed_height.url);
+
+            gifDiv.prepend(p);
+            gifDiv.prepend(image);
+
+            $("#gifs-here").prepend(gifDiv);
+        }
+
+
+
+
+
+
+
+
+
+/*          console.log(response);
+     $("#button-view").html(JSON.stringify(response));*/
+ })
+
+      
+
+        //$("#add-movie").
+     
+        renderButtons();
+      });
+
+
+      renderButtons();
+</script>
+</div>
+</body>
+</html>
