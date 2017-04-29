@@ -18,14 +18,26 @@
 
  <div class="container">
     <h1>Gif Search</h1>
-<div id="buttons-view"></div>
+<div id="buttons-view">
+  <button class="btn btn-info" data-name="Riverrun" style="margin: 5px;">Riverrun</button>
+  <button class="btn btn-info" data-name="Past" style="margin: 5px;">Past</button>
+  <button class="btn btn-info" data-name="Eve" style="margin: 5px;">Eve</button>
+  <button class="btn btn-info" data-name="And" style="margin: 5px;">And</button>
+  <button class="btn btn-info" data-name="Adam's" style="margin: 5px;">Adam's</button>
+  <button class="btn btn-info" data-name="From" style="margin: 5px;">From</button>
+  <button class="btn btn-info" data-name="Swerve" style="margin: 5px;">Swerve</button>
+  <button class="btn btn-info" data-name="Of" style="margin: 5px;">Of</button>
+  <button class="btn btn-info" data-name="Shore" style="margin: 5px;">Shore</button>
+  <button class="btn btn-info" data-name="To" style="margin: 5px;">To</button>
+  <button class="btn btn-info" data-name="Bend" style="margin: 5px;">Bend</button>
+  <button class="btn btn-info" data-name="Of" style="margin: 5px;">Of</button>
+  <button class="btn btn-info" data-name="Bay" style="margin: 5px;">Bay</button>
+</div>
 
 <form id="form">
       <label for="button-input">Add Your Own!</label>
       <input type="text" id="button-input">
       <br>
-
-      <!-- Button triggers new movie to be added -->
       <input id="add-button" type="submit" value="Add Your Own!">
     </form>
 
@@ -34,87 +46,191 @@
 
     <script type="text/javascript">
 
-var buttons = ["Riverrun", "Past", "Eve", "and", "Adam's", "from", "swerve", "of", "shore", "to", "bend", 
-"of", "bay"];
+$(document).ready(function(){
 
-function renderButtons() {
+    $("button").on('click', function() {
+        var buttonWord = $(this).data('name');
+        var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + buttonWord + "&api_key=dc6zaTOxFJmzC";
+        $.ajax({
+            url: queryURL,
+            method: 'GET'
+        })
+            .done(function(response) {
 
 
+                console.log(response)
+
+                var results = response.data;
+
+                for (var i = 0; i < results.length; i++) {
+
+                    var gifDiv = $('<div/>');
+
+                    var rating =$('<div/>');
+
+                    rating.text(results[i].rating);
+
+                    var gif = $('<img/>');
+
+                    gif.addClass('myImg')
+
+                    gif.attr('src', results[i].images.fixed_height.url);
+
+                    gif.attr('data-still', results[i].images.fixed_height_still.url)
+
+                    gif.attr('data-animate', results[i].images.fixed_height.url)
+
+                    gif.attr('data-state', 'still');
+
+                    gifDiv.append(rating);
+
+                    gifDiv.append(gif);
+
+                    gifDiv.prependTo($('#gifs-here'));
+                }
+
+                $('.myImg').on('click', function() {
+            
+                    var state = $(this).attr('data-state'); 
+                    console.log(this);
+
+                    if (state == 'still') {
+                    
+                    $(this).attr('src', $(this).data('animate'));
+                    
+                    $(this).attr('data-state', 'animate');
+
+                    } else {
+                            
+                    $(this).attr('src', $(this).data('still'));
+                    
+                    $(this).attr('data-state', 'still');
+                    }      
+                });
+            });
+    });
+
+    var buttons = [''];
+
+    function renderButtons() {
         $("#buttons-view").empty();
-        
         for (var i = 0; i < buttons.length; i++){
 
           $("#buttons-view").append("<button>"+ buttons[i]);
+//loops through and adds a button for each array item
+        } 
+      }//renderButtonsEND
 
 
-        }
-//so now the NEW buttons work, but the existing ones don't... //think I need to add the old ones to the array... push... and then something
-        
-      }   //this is where renderButtons() ends!
+        $('#add-button').on('click', function(event){
+            event.preventDefault();
+            var theButton = $("#button-input").val();
 
-
-//this is the start of the click to MAKE A BUTTON
-      $("#add-button").on("click", function(event) {
-      
-        event.preventDefault();
-    
-    //grabs text from input...
-       var theButton = $("#button-input").val();
-
-//pushes new button into the Array, clears input space...
-        buttons.push(theButton);
+            buttons.push(theButton);
          $("#button-input").val("");
 
 
-     var giphyKey = "dc6zaTOxFJmzC";
-     var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + theButton + "&api_key=dc6zaTOxFJmzC";
+          //gif.attr('data-name',image).html(image);
+            
+            $("#buttons-view").append("<button>" + theButton);
+            $("button").addClass("btn btn-info").attr("data-name");
 
 
+            queryURL = "https://api.giphy.com/v1/gifs/search?q=" + theButton + "&api_key=dc6zaTOxFJmzC&limit=10";
+                console.log(theButton);
 
-     $.ajax({
-        url: queryURL,
-        method: "GET"
-      }).done(function(response){
-        var results = response.data;
+            $.ajax({
+            url: queryURL,
+            method: 'GET'
+            })
 
-        for (var i = 0; i < results.length; i++){
-            var gifDiv = $("<div class='item'>");
+            .done(function(response) {
 
-            var rating = results[i].rating;
+            var results = response.data;
 
-            var p = $("<p>").text("Rating: " + rating);
+                for (var i = 0; i < results.length; i++) {
 
-            var image = $("<img>");
-            image.attr("src", results[i].images.fixed_height.url);
+                    var gifDiv = $('<div/>');
 
-            gifDiv.prepend(p);
-            gifDiv.prepend(image);
+                    var rating =$('<p/>');
 
-            $("#gifs-here").prepend(gifDiv);
-        }
+                    rating.text(results[i].rating);
 
+                    var gif = $('<img/>');
 
+                    gif.addClass('myImg')
 
+                    gif.attr('src', results[i].images.fixed_height_still.url);
 
+                    gif.attr('data-still', results[i].images.fixed_height_still.url)
 
+                    gif.attr('data-animate', results[i].images.fixed_height.url)
 
+                    .attr('data-state', 'still');
 
+                    gifDiv.append(rating);
 
+                    gifDiv.append(gif);
 
-/*          console.log(response);
-     $("#button-view").html(JSON.stringify(response));*/
- })
+                    gifDiv.prependTo($('#gifs-here'));
+                }
 
-      
+                $('.myImg').on('click', function() {
+            
+                    var state = $(this).attr('data-state'); 
+                    console.log(this);
 
-        //$("#add-movie").
-     
-        renderButtons();
-      });
+                    if (state == 'still') {
+                    
+                    $(this).attr('src', $(this).data('animate'));
+                    
+                    $(this).attr('data-state', 'animate');
 
+                    } else {
+                            
+                    $(this).attr('src', $(this).data('still'));
+                    
+                    $(this).attr('data-state', 'still');
+                    }      
+                });
+            });
 
-      renderButtons();
+            $("#button-input").val("");
+            return false;
+        })
+  
+});
+
 </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </div>
 </body>
 </html>
