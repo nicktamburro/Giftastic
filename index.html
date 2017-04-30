@@ -5,6 +5,7 @@
 	<title>Giftastic!</title>
 	<link rel="stylesheet" type="text/css" href="assets/css/reset.css">
 	<link rel="stylesheet" type="text/css" href="assets/css/style.css">
+  <link href="https://fonts.googleapis.com/css?family=Aguafina+Script|Tulpen+One" rel="stylesheet">
 	<!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 	<script
@@ -15,9 +16,19 @@
 
 </head>
 <body>
-
  <div class="container">
-    <h1>Gif Search</h1>
+    <div class="jumbotron">
+    <h1 id="title">The First Page of James Joyce's "Finnegan's Wake" as GIFS!</h1>
+    <p id="jumboText">riverrun, past Eve and Adam’s, from swerve of shore to bend of bay, brings us by a commodius vicus of recirculation back to Howth Castle and Environs.
+Sir Tristram, violer d’amores, fr’over the short sea, had passen-core rearrived from North Armorica on this side the scraggy isthmus of Europe Minor to wielderfight his penisolate war: nor had topsawyer’s rocks by the stream Oconee exaggerated themselse to Laurens County’s gorgios while they went doublin their mumper all the time: nor avoice from afire bellowsed mishe mishe to tauftauf thuartpeatrick not yet, though venissoon after, had a kidscad buttended a bland old isaac: not yet, though all’s fair in vanessy, were sosie sesthers wroth with twone nathandjoe. Rot a peck of pa’s malt had Jhem or Shen brewed by arclight and rory end to the regginbrow was to be seen ringsome on the aquaface.
+The fall (bababadalgharaghtakamminarronnkonnbronntonner-ronntuonnthunntrovarrhounawnskawntoohoohoordenenthur — nuk!) of a once wallstrait oldparr is retaled early in bed and later on life down through all christian minstrelsy. </p>
+<form id="form">
+      <label for="button-input">Copy and paste something to see if there really is a Gif for every word!</label>
+      <input type="text" id="button-input">
+      <br>
+      <input id="add-button" type="submit" value="Nuk!">
+    </form>
+    </div>
 <div id="buttons-view">
   <button class="btn btn-info" data-name="Riverrun" style="margin: 5px;">Riverrun</button>
   <button class="btn btn-info" data-name="Past" style="margin: 5px;">Past</button>
@@ -34,203 +45,10 @@
   <button class="btn btn-info" data-name="Bay" style="margin: 5px;">Bay</button>
 </div>
 
-<form id="form">
-      <label for="button-input">Add Your Own!</label>
-      <input type="text" id="button-input">
-      <br>
-      <input id="add-button" type="submit" value="Add Your Own!">
-    </form>
+
 
     <div id="gifs-here">
     </div>
-
-    <script type="text/javascript">
-
-$(document).ready(function(){
-
-    $("button").on('click', function() {
-        var buttonWord = $(this).data('name');
-        var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + buttonWord + "&api_key=dc6zaTOxFJmzC";
-        $.ajax({
-            url: queryURL,
-            method: 'GET'
-        })
-            .done(function(response) {
-
-
-                console.log(response)
-
-                var results = response.data;
-
-                for (var i = 0; i < results.length; i++) {
-
-                    var gifDiv = $('<div/>');
-
-                    var rating =$('<div/>');
-
-                    rating.text(results[i].rating);
-
-                    var gif = $('<img/>');
-
-                    gif.addClass('myImg')
-
-                    gif.attr('src', results[i].images.fixed_height.url);
-
-                    gif.attr('data-still', results[i].images.fixed_height_still.url)
-
-                    gif.attr('data-animate', results[i].images.fixed_height.url)
-
-                    gif.attr('data-state', 'still');
-
-                    gifDiv.append(rating);
-
-                    gifDiv.append(gif);
-
-                    gifDiv.prependTo($('#gifs-here'));
-                }
-
-                $('.myImg').on('click', function() {
-            
-                    var state = $(this).attr('data-state'); 
-                    console.log(this);
-
-                    if (state == 'still') {
-                    
-                    $(this).attr('src', $(this).data('animate'));
-                    
-                    $(this).attr('data-state', 'animate');
-
-                    } else {
-                            
-                    $(this).attr('src', $(this).data('still'));
-                    
-                    $(this).attr('data-state', 'still');
-                    }      
-                });
-            });
-    });
-
-    var buttons = [''];
-
-    function renderButtons() {
-        $("#buttons-view").empty();
-        for (var i = 0; i < buttons.length; i++){
-
-          $("#buttons-view").append("<button>"+ buttons[i]);
-//loops through and adds a button for each array item
-        } 
-      }//renderButtonsEND
-
-
-        $('#add-button').on('click', function(event){
-            event.preventDefault();
-            var theButton = $("#button-input").val();
-
-            buttons.push(theButton);
-         $("#button-input").val("");
-
-
-          //gif.attr('data-name',image).html(image);
-            
-            $("#buttons-view").append("<button>" + theButton);
-            $("button").addClass("btn btn-info").attr("data-name");
-
-
-            queryURL = "https://api.giphy.com/v1/gifs/search?q=" + theButton + "&api_key=dc6zaTOxFJmzC&limit=10";
-                console.log(theButton);
-
-            $.ajax({
-            url: queryURL,
-            method: 'GET'
-            })
-
-            .done(function(response) {
-
-            var results = response.data;
-
-                for (var i = 0; i < results.length; i++) {
-
-                    var gifDiv = $('<div/>');
-
-                    var rating =$('<p/>');
-
-                    rating.text(results[i].rating);
-
-                    var gif = $('<img/>');
-
-                    gif.addClass('myImg')
-
-                    gif.attr('src', results[i].images.fixed_height_still.url);
-
-                    gif.attr('data-still', results[i].images.fixed_height_still.url)
-
-                    gif.attr('data-animate', results[i].images.fixed_height.url)
-
-                    .attr('data-state', 'still');
-
-                    gifDiv.append(rating);
-
-                    gifDiv.append(gif);
-
-                    gifDiv.prependTo($('#gifs-here'));
-                }
-
-                $('.myImg').on('click', function() {
-            
-                    var state = $(this).attr('data-state'); 
-                    console.log(this);
-
-                    if (state == 'still') {
-                    
-                    $(this).attr('src', $(this).data('animate'));
-                    
-                    $(this).attr('data-state', 'animate');
-
-                    } else {
-                            
-                    $(this).attr('src', $(this).data('still'));
-                    
-                    $(this).attr('data-state', 'still');
-                    }      
-                });
-            });
-
-            $("#button-input").val("");
-            return false;
-        })
-  
-});
-
-</script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 </div>
 </body>
 </html>

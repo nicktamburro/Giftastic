@@ -1,0 +1,24 @@
+.jumbotron {
+	padding-bottom: 1%;
+	margin-bottom: 10%;
+	background-image: url(../images/paper3.jpg);
+}
+
+p {
+	font-size: 10px;
+}
+
+#jumboText {
+	font-size: 17px;
+}
+
+#title {
+	margin-top: 0;
+	font-family: 'Aguafina Script', cursive;
+	text-align: center;
+	font-size: 40px;
+}
+
+body {
+	background-image: url(../images/background.jpg);
+}
